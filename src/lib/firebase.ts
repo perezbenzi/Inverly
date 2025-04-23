@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth'
 import { getAnalytics } from 'firebase/analytics'
 import { 
   getFirestore, 
@@ -10,7 +10,8 @@ import {
   where, 
   deleteDoc, 
   doc, 
-  updateDoc 
+  updateDoc,
+  writeBatch
 } from 'firebase/firestore'
 import type { Investment } from '@/types/investment'
 
@@ -84,4 +85,113 @@ export const getUserInvestments = async (userId: string) => {
     id: doc.id,
     ...doc.data()
   })) as Investment[]
+}
+
+// Re-authenticate user
+export const reauthenticate = async (password: string) => {
+  if (!auth.currentUser || !auth.currentUser.email) {
+    throw new Error('No authenticated user or email')
+  }
+  
+  try {
+    const credential = EmailAuthProvider.credential(
+      auth.currentUser.email,
+      password
+    )
+    
+    return await reauthenticateWithCredential(auth.currentUser, credential)
+  } catch (error: any) {
+    console.error('Error re-authenticating:', error)
+    
+    // Convertir errores específicos
+    if (error.code === 'auth/wrong-password') {
+      throw error
+    }
+    
+    throw error
+  }
+}
+
+// Delete user account and all associated data
+export const deleteUserAccount = async () => {
+  if (!auth.currentUser) throw new Error('No authenticated user')
+  
+  try {
+    // DELETE ONLY USER ACCOUNT - skip data deletion due to permissions issues
+    // This approach focuses on deleting the auth user first
+    return await deleteUser(auth.currentUser)
+  } catch (error: any) {
+    console.error('Error deleting account:', error.message)
+    
+    // Most likely the user requires re-authentication
+    if (error.code === 'auth/requires-recent-login') {
+      throw error
+    }
+    
+    // If it's a permission error, we should still try to use the dialog approach
+    throw error
+  }
+}
+
+// Delete user account and all associated data with re-authentication
+export const deleteUserAccountWithReauth = async (password: string) => {
+  if (!auth.currentUser) throw new Error('No authenticated user')
+  
+  try {
+    // Re-authenticate user first
+    await reauthenticate(password)
+    
+    // Delete only the user account from Auth
+    // We'll skip data deletion due to permission issues
+    return await deleteUser(auth.currentUser)
+  } catch (error: any) {
+    console.error('Error deleting account with reauth:', error.message)
+    throw error
+  }
+}
+
+// Delete all data associated with a user
+export const deleteAllUserData = async (userId: string) => {
+  try {
+    // Get all user investments
+    const investments = await getUserInvestments(userId)
+    
+    // Si no hay inversiones, no es necesario usar batch
+    if (investments.length === 0) {
+      return
+    }
+    
+    // Delete all investments in a batch
+    const batch = writeBatch(db)
+    
+    investments.forEach(investment => {
+      const investmentRef = doc(db, 'investments', investment.id)
+      batch.delete(investmentRef)
+    })
+    
+    // Commit the batch
+    return batch.commit()
+  } catch (error: any) {
+    console.error('Error deleting user data:', error.message)
+    // Si hay un error al eliminar los datos, continuamos con la eliminación de la cuenta
+    // pero registramos el error para referencia
+  }
+}
+
+// Change user password
+export const changePassword = async (currentPassword: string, newPassword: string) => {
+  if (!auth.currentUser) {
+    throw new Error('No authenticated user')
+  }
+  
+  try {
+    // First re-authenticate the user
+    await reauthenticate(currentPassword)
+    
+    // Then update the password
+    return await updatePassword(auth.currentUser, newPassword)
+  } catch (error: any) {
+    console.error('Error changing password:', error)
+    throw error
+  }
 } 

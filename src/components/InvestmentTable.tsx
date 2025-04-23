@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ const InvestmentTable: React.FC<InvestmentTableProps> = ({
 }) => {
   const formatNumber = (num: number | undefined) => {
     if (num === undefined) return "-";
-    return new Intl.NumberFormat("es-ES", {
+    return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
       minimumFractionDigits: 2,
@@ -27,7 +26,7 @@ const InvestmentTable: React.FC<InvestmentTableProps> = ({
   };
 
   const formatEth = (num: number) => {
-    return new Intl.NumberFormat("es-ES", {
+    return new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 5,
       maximumFractionDigits: 5
     }).format(num);
@@ -35,7 +34,7 @@ const InvestmentTable: React.FC<InvestmentTableProps> = ({
 
   const formatPercentage = (num: number | undefined) => {
     if (num === undefined) return "-";
-    return new Intl.NumberFormat("es-ES", {
+    return new Intl.NumberFormat("en-US", {
       style: "percent",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
@@ -43,7 +42,7 @@ const InvestmentTable: React.FC<InvestmentTableProps> = ({
   };
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("es-ES");
+    return new Date(dateStr).toLocaleDateString("en-US");
   };
 
   return (
@@ -51,21 +50,21 @@ const InvestmentTable: React.FC<InvestmentTableProps> = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Fecha</TableHead>
-            <TableHead>Inversión</TableHead>
-            <TableHead>Precio ETH</TableHead>
-            <TableHead>Cantidad ETH</TableHead>
-            <TableHead>Valor Actual</TableHead>
-            <TableHead>Ganancia/Pérdida</TableHead>
-            <TableHead>% Retorno</TableHead>
-            <TableHead>Acciones</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Investment</TableHead>
+            <TableHead>ETH Price</TableHead>
+            <TableHead>ETH Amount</TableHead>
+            <TableHead>Current Value</TableHead>
+            <TableHead>Profit/Loss</TableHead>
+            <TableHead>% Return</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {investments.length === 0 ? (
             <TableRow>
               <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                No hay inversiones. Agrega una para comenzar a hacer seguimiento.
+                No investments found. Add one to start tracking.
               </TableCell>
             </TableRow>
           ) : (

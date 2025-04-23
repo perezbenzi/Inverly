@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getEthPrice } from "@/services/cryptoApi";
@@ -19,7 +18,7 @@ const CurrentEthPrice: React.FC = () => {
       setLastUpdated(new Date());
     } catch (error) {
       console.error("Error fetching current ETH price:", error);
-      toast.error("No se pudo obtener el precio actual de ETH");
+      toast.error("Could not get current ETH price");
     } finally {
       setIsLoading(false);
     }
@@ -32,14 +31,14 @@ const CurrentEthPrice: React.FC = () => {
   }, []);
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("es-ES", {
+    return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
     }).format(value);
   };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("es-ES", {
+    return date.toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -49,7 +48,7 @@ const CurrentEthPrice: React.FC = () => {
     <Card className="bg-card">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground flex justify-between items-center">
-          <span>Precio Actual de ETH</span>
+          <span>Current ETH Price</span>
           <Button
             variant="ghost"
             size="icon"
@@ -67,12 +66,12 @@ const CurrentEthPrice: React.FC = () => {
             <div className="text-2xl font-bold">{formatCurrency(price)}</div>
             {lastUpdated && (
               <p className="text-xs text-muted-foreground mt-1">
-                Actualizado: {formatTime(lastUpdated)}
+                Updated: {formatTime(lastUpdated)}
               </p>
             )}
           </>
         ) : (
-          <div className="text-2xl font-bold animate-pulse">Cargando...</div>
+          <div className="text-2xl font-bold animate-pulse">Loading...</div>
         )}
       </CardContent>
     </Card>

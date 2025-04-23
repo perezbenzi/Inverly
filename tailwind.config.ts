@@ -1,5 +1,5 @@
-
 import type { Config } from "tailwindcss";
+import { COLORS } from "./src/constants";
 
 export default {
 	darkMode: ["class"],
@@ -25,12 +25,7 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
-				crypto: {
-					positive: '#4ade80',
-					negative: '#ef4444',
-					blue: '#3b82f6',
-					indigo: '#6366f1',
-				},
+				crypto: COLORS.crypto,
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'

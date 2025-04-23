@@ -40,7 +40,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
       setEthPrice(price.toString());
     } catch (error) {
       console.error("Error fetching ETH price:", error);
-      toast.error("Error obteniendo el precio de ETH. Ingrésalo manualmente.");
+      toast.error("Error getting ETH price. Enter it manually.");
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +50,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
     e.preventDefault();
     
     if (!date || !amount || !ethPrice) {
-      toast.error("Por favor completa todos los campos");
+      toast.error("Please complete all fields");
       return;
     }
 
@@ -58,12 +58,12 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
     const ethPriceNumber = parseFloat(ethPrice);
     
     if (isNaN(amountNumber) || isNaN(ethPriceNumber)) {
-      toast.error("Por favor ingresa valores numéricos válidos");
+      toast.error("Please enter valid numeric values");
       return;
     }
 
     if (amountNumber <= 0 || ethPriceNumber <= 0) {
-      toast.error("Los valores deben ser mayores a cero");
+      toast.error("Values must be greater than zero");
       return;
     }
 
@@ -84,18 +84,18 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
       fetchEthPrice();
     }
     
-    toast.success(editingInvestment ? "Inversión actualizada" : "Inversión agregada");
+    toast.success(editingInvestment ? "Investment updated" : "Investment added");
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{editingInvestment ? "Editar Inversión" : "Nueva Inversión"}</CardTitle>
+        <CardTitle>{editingInvestment ? "Edit Investment" : "New Investment"}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="date">Fecha</Label>
+            <Label htmlFor="date">Date</Label>
             <Input
               id="date"
               type="date"
@@ -106,11 +106,11 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="amount">Monto Invertido (USD)</Label>
+            <Label htmlFor="amount">Amount Invested (USD)</Label>
             <Input
               id="amount"
               type="number"
-              placeholder="Ej: 500"
+              placeholder="Ex: 500"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               step="0.01"
@@ -121,11 +121,11 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
           
           <div className="grid gap-2">
             <div className="flex flex-col sm:flex-row justify-between gap-2">
-              <Label htmlFor="ethPrice">Precio de ETH (USD)</Label>
+              <Label htmlFor="ethPrice">ETH Price (USD)</Label>
               <Input
               id="ethPrice"
               type="number"
-              placeholder="Ej: 3500"
+              placeholder="Ex: 3500"
               value={ethPrice}
               onChange={(e) => setEthPrice(e.target.value)}
               step="0.01"
@@ -140,7 +140,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
                 disabled={isLoading}
                 className="w-full sm:w-auto"
               >
-                {isLoading ? "Cargando..." : "Obtener Precio Actual"}
+                {isLoading ? "Loading..." : "Get Current Price"}
               </Button>
             </div>
 
@@ -149,11 +149,11 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
           <div className="flex justify-end space-x-2">
             {editingInvestment && (
               <Button variant="outline" type="button" onClick={onCancelEdit}>
-                Cancelar
+                Cancel
               </Button>
             )}
             <Button type="submit">
-              {editingInvestment ? "Actualizar" : "Agregar Inversión"}
+              {editingInvestment ? "Update" : "Add Investment"}
             </Button>
           </div>
         </form>

@@ -47,8 +47,8 @@ export const LoginForm = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+             {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
           <Button type="submit" className="w-full">
             Login
           </Button>

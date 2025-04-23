@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Investment } from "@/types/investment";
@@ -13,7 +12,7 @@ const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
   currentEthPrice,
 }) => {
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("es-ES", {
+    return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
     }).format(value);
@@ -36,7 +35,7 @@ const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">
-            Total Invertido
+            Total Invested
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -53,7 +52,7 @@ const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
         <CardContent>
           <div className="text-2xl font-bold">{totalEth.toFixed(5)} ETH</div>
           <p className="text-xs text-muted-foreground mt-1">
-            Precio actual: {formatCurrency(currentEthPrice)}
+            Current price: {formatCurrency(currentEthPrice)}
           </p>
         </CardContent>
       </Card>
@@ -61,7 +60,7 @@ const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">
-            Valor Actual
+            Current Value
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -72,7 +71,7 @@ const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">
-            Ganancia/Pérdida
+            Profit/Loss
           </CardTitle>
         </CardHeader>
         <CardContent>

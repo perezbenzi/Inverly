@@ -1,6 +1,15 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { User } from 'firebase/auth'
-import { auth, loginUser, registerUser, logoutUser } from '../lib/firebase'
+import { 
+  auth, 
+  loginUser, 
+  registerUser, 
+  logoutUser, 
+  deleteUserAccount, 
+  deleteUserAccountWithReauth, 
+  reauthenticate,
+  changePassword
+} from '../lib/firebase'
 
 interface AuthContextType {
   user: User | null
@@ -8,6 +17,10 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>
   register: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  deleteAccount: () => Promise<void>
+  deleteAccountWithReauth: (password: string) => Promise<void>
+  reauthenticateUser: (password: string) => Promise<void>
+  updatePassword: (currentPassword: string, newPassword: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -36,12 +49,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await logoutUser()
   }
 
+  const deleteAccount = async () => {
+    await deleteUserAccount()
+  }
+
+  const deleteAccountWithReauth = async (password: string) => {
+    await deleteUserAccountWithReauth(password)
+  }
+
+  const reauthenticateUser = async (password: string) => {
+    await reauthenticate(password)
+  }
+
+  const updatePassword = async (currentPassword: string, newPassword: string) => {
+    await changePassword(currentPassword, newPassword)
+  }
+
   const value = {
     user,
     loading,
     login,
     register,
-    logout
+    logout,
+    deleteAccount,
+    deleteAccountWithReauth,
+    reauthenticateUser,
+    updatePassword
   }
 
   return (

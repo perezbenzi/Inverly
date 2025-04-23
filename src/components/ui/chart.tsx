@@ -1,9 +1,7 @@
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
-
+import { THEMES } from "@/constants"
 import { cn } from "@/lib/utils"
-
-const THEMES = { light: "", dark: ".dark" } as const
 
 export type ChartConfig = {
   [k in string]: {
