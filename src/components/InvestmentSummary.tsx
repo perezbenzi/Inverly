@@ -52,7 +52,7 @@ const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
         <CardContent>
           <div className="text-2xl font-bold">{totalEth.toFixed(5)} ETH</div>
           <p className="text-xs text-muted-foreground mt-1">
-            Current price: {formatCurrency(currentEthPrice)}
+            {formatCurrency(currentEthPrice)}
           </p>
         </CardContent>
       </Card>

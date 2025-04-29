@@ -28,21 +28,30 @@ const Index = () => {
   useEffect(() => {
     if (user) {
       loadInvestments();
-      fetchCurrentEthPrice();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (investments.length > 0 && currentEthPrice > 0) {
+      const updatedInvestments = updateCalculations(investments, currentEthPrice);
+      setInvestments(updatedInvestments);
+    }
+  }, [currentEthPrice]);
 
   const loadInvestments = async () => {
     if (!user) return;
     
     try {
       setIsLoading(true);
-      const userInvestments = await getUserInvestments(user.uid);
-      await fetchCurrentEthPrice();
+      const [userInvestments, price] = await Promise.all([
+        getUserInvestments(user.uid),
+        getEthPrice()
+      ]);
       
-      // Calculate derived values for each investment
+      setCurrentEthPrice(price);
+      
       const calculatedInvestments = userInvestments.map(investment => {
-        const currentValue = investment.ethAmount * currentEthPrice;
+        const currentValue = investment.ethAmount * price;
         const profit = currentValue - investment.amount;
         const profitPercentage = (profit / investment.amount) * 100;
         
@@ -60,18 +69,6 @@ const Index = () => {
       toast.error("Could not load investments");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const fetchCurrentEthPrice = async () => {
-    try {
-      const price = await getEthPrice();
-      setCurrentEthPrice(price);
-      return price;
-    } catch (error) {
-      console.error("Error fetching ETH price:", error);
-      toast.error("Could not get current ETH price");
-      return 0;
     }
   };
 
@@ -125,7 +122,6 @@ const Index = () => {
 
   const handleSaveInvestment = async (investment: Investment) => {
     try {
-      // Calculate derived values
       const currentValue = investment.ethAmount * currentEthPrice;
       const profit = currentValue - investment.amount;
       const profitPercentage = (profit / investment.amount) * 100;
@@ -138,14 +134,12 @@ const Index = () => {
       };
       
       if (editingInvestment) {
-        // Update existing investment
         await updateInvestmentInFirestore(investment);
         setInvestments(prev => 
           prev.map(inv => inv.id === investment.id ? completedInvestment : inv)
         );
         toast.success("Investment successfully updated");
       } else {
-        // Add new investment
         if (user) {
           const newInvestmentRef = await saveInvestmentToFirestore(investment, user.uid);
           const newInvestment = {
@@ -167,6 +161,18 @@ const Index = () => {
   const handleCancelEdit = () => {
     setIsAddingInvestment(false);
     setEditingInvestment(null);
+  };
+
+  const fetchCurrentEthPrice = async () => {
+    try {
+      const price = await getEthPrice();
+      setCurrentEthPrice(price);
+      return price;
+    } catch (error) {
+      console.error("Error fetching ETH price:", error);
+      toast.error("Could not get current ETH price");
+      return 0;
+    }
   };
 
   if (!user) {

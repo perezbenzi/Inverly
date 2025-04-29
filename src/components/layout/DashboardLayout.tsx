@@ -37,7 +37,7 @@ export function DashboardLayout({ children, className }: DashboardLayoutProps) {
         "pt-14 lg:pt-0",
         className
       )}>
-        <div className="container mx-auto py-6 px-4 md:px-6 lg:px-8 max-w-6xl">
+        <div className="container mx-auto pt-10 pb-6 md:px-6 max-w-6xl">
           {children}
         </div>
       </main>

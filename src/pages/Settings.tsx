@@ -32,13 +32,11 @@ export const Settings = () => {
   const { user, deleteAccount, deleteAccountWithReauth, logout, updatePassword } = useAuth()
   const navigate = useNavigate()
   
-  // State for account deletion
   const [isDeleting, setIsDeleting] = useState(false)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
   const [password, setPassword] = useState('')
   const [authError, setAuthError] = useState('')
   
-  // State for password change
   const [showPasswordDialog, setShowPasswordDialog] = useState(false)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -47,7 +45,6 @@ export const Settings = () => {
   const [isChangingPassword, setIsChangingPassword] = useState(false)
 
   const handleDeleteAccount = async () => {
-    // Always show the authentication dialog first
     setShowAuthDialog(true)
   }
 
@@ -93,7 +90,6 @@ export const Settings = () => {
     setAuthError('')
   }
 
-  // Functions for password change
   const handleOpenPasswordDialog = () => {
     setShowPasswordDialog(true)
     setCurrentPassword('')
@@ -111,7 +107,6 @@ export const Settings = () => {
   }
 
   const handleChangePassword = async () => {
-    // Validations
     if (!currentPassword.trim()) {
       setPasswordError('Enter your current password')
       return
@@ -152,7 +147,6 @@ export const Settings = () => {
           await logout()
           navigate('/login')
         } catch {
-          // If logout fails, we continue showing the error
         }
       } else {
         setPasswordError('Error changing password')
@@ -194,7 +188,6 @@ export const Settings = () => {
           </Button>
         </div>
 
-        {/* Security section */}
         <div className="border border-border rounded-lg p-6 space-y-6">
           <div className="space-y-2">
             <h2 className="text-xl font-semibold">Security</h2>
@@ -225,7 +218,6 @@ export const Settings = () => {
           </div>
         </div>
 
-        {/* Account section */}
         <div className="border border-border rounded-lg p-6 space-y-6">
           <div className="space-y-2">
             <h2 className="text-xl font-semibold">Account</h2>
@@ -278,7 +270,6 @@ export const Settings = () => {
         </div>
       </div>
 
-      {/* Re-authentication dialog for account deletion */}
       <Dialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -329,7 +320,6 @@ export const Settings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Dialog for changing password */}
       <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

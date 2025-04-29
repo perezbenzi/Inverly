@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { LoginForm } from '../components/auth/LoginForm'
+import { Logo } from '../components/ui/logo'
 
 export const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="max-w-md px-6">
         <div className="space-y-6">
+          <Logo />
           <LoginForm />
           <div className="text-center text-sm text-muted-foreground">
             Don't have an account?{' '}

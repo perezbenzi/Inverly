@@ -5,6 +5,7 @@ import { Login } from "@/pages/Login"
 import { Register } from "@/pages/Register"
 import { Settings } from "@/pages/Settings"
 import NotFound from "@/pages/NotFound"
+import Scenarios from "@/pages/Scenarios"
 
 export const AppRoutes = () => (
   <Routes>
@@ -15,6 +16,14 @@ export const AppRoutes = () => (
       element={
         <PrivateRoute>
           <Index />
+        </PrivateRoute>
+      }
+    />
+    <Route
+      path="/scenarios"
+      element={
+        <PrivateRoute>
+          <Scenarios />
         </PrivateRoute>
       }
     />

@@ -1,5 +1,5 @@
 import React from "react"
-import { User, LogOut, X, Settings, Home } from "lucide-react"
+import { User, LogOut, X, Settings, Home, Calculator } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -64,8 +64,6 @@ export function Sidebar({ className, isOpen, setIsOpen }: SidebarProps) {
             <h2 className="text-xl font-semibold text-sidebar-foreground">Inverly</h2>
           </div>
 
-
-
           <nav className="flex-1 px-4 py-4 space-y-2">
             <Link 
               to="/" 
@@ -74,6 +72,14 @@ export function Sidebar({ className, isOpen, setIsOpen }: SidebarProps) {
             >
               <Home className="h-5 w-5" />
               <span>Home</span>
+            </Link>
+            <Link 
+              to="/scenarios" 
+              className="flex items-center gap-2 p-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+              onClick={isOpen ? closeSidebar : undefined}
+            >
+              <Calculator className="h-5 w-5" />
+              <span>Scenarios</span>
             </Link>
             <Link 
               to="/settings" 
