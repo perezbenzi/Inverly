@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getEthPrice } from "@/services/cryptoApi";
 import { Investment } from "@/types/investment";
 import { toast } from "sonner";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface InvestmentFormProps {
   onAddInvestment: (investment: Investment) => void;
@@ -22,12 +23,14 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
   const [amount, setAmount] = useState("");
   const [ethPrice, setEthPrice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [type, setType] = useState<'deposit' | 'withdrawal'>(editingInvestment?.type || 'deposit');
 
   useEffect(() => {
     if (editingInvestment) {
       setDate(new Date(editingInvestment.date).toISOString().split("T")[0]);
-      setAmount(editingInvestment.amount.toString());
+      setAmount(Math.abs(editingInvestment.amount).toString());
       setEthPrice(editingInvestment.ethPrice.toString());
+      setType(editingInvestment.type || 'deposit');
     } else {
       fetchEthPrice();
     }
@@ -67,17 +70,24 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
       return;
     }
 
-    const ethAmount = amountNumber / ethPriceNumber;
+    let finalAmount = amountNumber;
+    let finalEthAmount = amountNumber / ethPriceNumber;
+    
+    if (type === 'withdrawal') {
+      finalAmount = -finalAmount;
+      finalEthAmount = -finalEthAmount;
+    }
 
-    const newInvestment: Investment = {
+    const investmentData: Investment = {
       id: editingInvestment?.id || Math.random().toString(36).substring(2, 9),
       date,
-      amount: amountNumber,
+      amount: finalAmount,
       ethPrice: ethPriceNumber,
-      ethAmount,
+      ethAmount: finalEthAmount,
+      type,
     };
 
-    onAddInvestment(newInvestment);
+    onAddInvestment(investmentData);
     
     if (!editingInvestment) {
       setAmount("");
@@ -106,7 +116,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="amount">Amount Invested (USD)</Label>
+            <Label htmlFor="amount">Amount (USD)</Label>
             <Input
               id="amount"
               type="number"
@@ -123,15 +133,15 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
             <div className="flex flex-col sm:flex-row justify-between gap-2">
               <Label htmlFor="ethPrice">ETH Price (USD)</Label>
               <Input
-              id="ethPrice"
-              type="number"
-              placeholder="Ex: 3500"
-              value={ethPrice}
-              onChange={(e) => setEthPrice(e.target.value)}
-              step="0.01"
-              min="0"
-              required
-            />
+                id="ethPrice"
+                type="number"
+                placeholder="Ex: 3500"
+                value={ethPrice}
+                onChange={(e) => setEthPrice(e.target.value)}
+                step="0.01"
+                min="0"
+                required
+              />
               <Button
                 type="button"
                 variant="outline"
@@ -143,7 +153,20 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({
                 {isLoading ? "Loading..." : "Get Current Price"}
               </Button>
             </div>
-
+          </div>
+          
+          <div className="grid gap-2">
+            <Label>Type</Label>
+            <RadioGroup value={type} onValueChange={(value) => setType(value as 'deposit' | 'withdrawal')} className="flex space-x-4">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="deposit" id="deposit" />
+                <Label htmlFor="deposit">Depósito</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="withdrawal" id="withdrawal" />
+                <Label htmlFor="withdrawal">Retiro</Label>
+              </div>
+            </RadioGroup>
           </div>
           
           <div className="flex justify-end space-x-2">

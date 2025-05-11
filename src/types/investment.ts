@@ -1,4 +1,3 @@
-
 export interface Investment {
   id: string;
   date: string;
@@ -8,6 +7,7 @@ export interface Investment {
   currentValue?: number;
   profit?: number;
   profitPercentage?: number;
+  type: 'deposit' | 'withdrawal';
 }
 
 export interface EthPriceData {

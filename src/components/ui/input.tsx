@@ -20,7 +20,6 @@ Input.displayName = "Input"
 
 export { Input }
 
-// Styles to disable autocomplete
 const style = document.createElement('style')
 style.innerHTML = `
   input:-webkit-autofill,

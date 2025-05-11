@@ -61,7 +61,7 @@ export function Sidebar({ className, isOpen, setIsOpen }: SidebarProps) {
       >
         <div className="flex flex-col h-full">
           <div className="hidden lg:block px-4 py-6 border-b border-sidebar-border">
-            <h2 className="text-xl font-semibold text-sidebar-foreground">Inverly</h2>
+            <h2 className="text-xl font-semibold text-sidebar-foreground">finance-track</h2>
           </div>
 
           <nav className="flex-1 px-4 py-4 space-y-2">

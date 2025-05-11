@@ -27,7 +27,7 @@ export function DashboardLayout({ children, className }: DashboardLayoutProps) {
         >
           <Menu className="h-6 w-6" />
         </Button>
-        <div className="ml-4 text-sidebar-foreground font-semibold">Inverly</div>
+        <div className="ml-4 text-sidebar-foreground font-semibold">finance-track</div>
       </header>
 
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />

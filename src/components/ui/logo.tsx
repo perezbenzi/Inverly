@@ -8,7 +8,7 @@ interface LogoProps {
 export function Logo({ className }: LogoProps) {
   return (
     <h1 className={cn("text-4xl font-bold text-white mb-6 text-center", className)}>
-      <span>Inverly</span>
+      <span>finance-track</span>
     </h1>
   )
 } 

@@ -45,6 +45,10 @@ const InvestmentTable: React.FC<InvestmentTableProps> = ({
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-US");
   };
+  
+  const getTypeLabel = (type: 'deposit' | 'withdrawal') => {
+    return type === 'deposit' ? 'Depósito' : 'Retiro';
+  };
 
   const sortedInvestments = [...investments].sort((a, b) => 
     new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -76,6 +80,10 @@ const InvestmentTable: React.FC<InvestmentTableProps> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-4">
+        <div>
+          <p className="text-sm text-muted-foreground">Type</p>
+          <p className="font-medium">{getTypeLabel(investment.type)}</p>
+        </div>
         <div>
           <p className="text-sm text-muted-foreground">Investment</p>
           <p className="font-medium">{formatNumber(investment.amount)}</p>
@@ -125,6 +133,7 @@ const InvestmentTable: React.FC<InvestmentTableProps> = ({
           <TableHeader>
             <TableRow>
               <TableHead>Date</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead>Investment</TableHead>
               <TableHead>ETH Price</TableHead>
               <TableHead>ETH Amount</TableHead>
@@ -138,6 +147,7 @@ const InvestmentTable: React.FC<InvestmentTableProps> = ({
             {sortedInvestments.map((investment) => (
               <TableRow key={investment.id}>
                 <TableCell>{formatDate(investment.date)}</TableCell>
+                <TableCell>{getTypeLabel(investment.type)}</TableCell>
                 <TableCell>{formatNumber(investment.amount)}</TableCell>
                 <TableCell>{formatNumber(investment.ethPrice)}</TableCell>
                 <TableCell>{formatEth(investment.ethAmount)}</TableCell>

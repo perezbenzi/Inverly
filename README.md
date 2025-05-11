@@ -4,7 +4,7 @@
 
 ## 🚀 Overview
 
-Inverly is a powerful web application that helps you track and analyze your investments. Monitor your profits, track historical purchases, and get real-time price updates all in one place.
+finance-track is a powerful web application that helps you track and analyze your investments. Monitor your profits, track historical purchases, and get real-time price updates all in one place.
 
 ## ✨ Features
 

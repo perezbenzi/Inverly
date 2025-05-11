@@ -50,7 +50,9 @@ const Index = () => {
       
       setCurrentEthPrice(price);
       
-      const calculatedInvestments = userInvestments.map(investment => {
+      const uniqueInvestments = removeDuplicateInvestments(userInvestments);
+      
+      const calculatedInvestments = uniqueInvestments.map(investment => {
         const currentValue = investment.ethAmount * price;
         const profit = currentValue - investment.amount;
         const profitPercentage = (profit / investment.amount) * 100;
@@ -59,7 +61,8 @@ const Index = () => {
           ...investment,
           currentValue,
           profit,
-          profitPercentage
+          profitPercentage,
+          type: investment.type || 'deposit'
         };
       });
       
@@ -70,6 +73,22 @@ const Index = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+  
+  const removeDuplicateInvestments = (investments: Investment[]) => {
+    const uniqueInvestments: Investment[] = [];
+    const idSet = new Set<string>();
+    
+    for (const investment of investments) {
+      if (!idSet.has(investment.id)) {
+        idSet.add(investment.id);
+        uniqueInvestments.push(investment);
+      } else {
+        console.warn(`Found duplicate investment with ID: ${investment.id}`);
+      }
+    }
+    
+    return uniqueInvestments;
   };
 
   const updateCalculations = (investments: Investment[], ethPrice: number) => {
@@ -134,9 +153,19 @@ const Index = () => {
       };
       
       if (editingInvestment) {
-        await updateInvestmentInFirestore(investment);
+        try {
+          await updateInvestmentInFirestore(investment);
+        } catch (error: any) {
+          if (error.message && error.message.includes('No document to update')) {
+            const newInvestmentRef = await saveInvestmentToFirestore(investment, user!.uid);
+            completedInvestment.id = newInvestmentRef.id;
+          } else {
+            throw error;
+          }
+        }
+        
         setInvestments(prev => 
-          prev.map(inv => inv.id === investment.id ? completedInvestment : inv)
+          prev.map(inv => inv.id === completedInvestment.id ? completedInvestment : inv)
         );
         toast.success("Investment successfully updated");
       } else {
@@ -147,7 +176,6 @@ const Index = () => {
             id: newInvestmentRef.id
           };
           setInvestments(prev => [...prev, newInvestment]);
-          toast.success("Investment successfully saved");
         }
       }
       setIsAddingInvestment(false);
@@ -173,6 +201,28 @@ const Index = () => {
       toast.error("Could not get current ETH price");
       return 0;
     }
+  };
+
+  const getDeposits = () => {
+    return investments
+      .filter(inv => inv.type === 'deposit')
+      .map(inv => {
+        if (investments.filter(other => other.id === inv.id).length > 1) {
+          return { ...inv, id: `${inv.id}_${Math.random().toString(36).substring(2, 9)}` };
+        }
+        return inv;
+      });
+  };
+
+  const getWithdrawals = () => {
+    return investments
+      .filter(inv => inv.type === 'withdrawal')
+      .map(inv => {
+        if (investments.filter(other => other.id === inv.id).length > 1) {
+          return { ...inv, id: `${inv.id}_${Math.random().toString(36).substring(2, 9)}` };
+        }
+        return inv;
+      });
   };
 
   if (!user) {
@@ -243,11 +293,25 @@ const Index = () => {
                 onCancelEdit={handleCancelEdit}
               />
             ) : (
-              <InvestmentTable 
-                investments={investments}
-                onEdit={handleEditInvestment}
-                onDelete={handleDeleteInvestment}
-              />
+              <>
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Deposits</h3>
+                  <InvestmentTable 
+                    investments={getDeposits()}
+                    onEdit={handleEditInvestment}
+                    onDelete={handleDeleteInvestment}
+                  />
+                </div>
+                
+                <div className="space-y-4 mt-8">
+                  <h3 className="text-lg font-medium">Retiros</h3>
+                  <InvestmentTable 
+                    investments={getWithdrawals()}
+                    onEdit={handleEditInvestment}
+                    onDelete={handleDeleteInvestment}
+                  />
+                </div>
+              </>
             )}
           </>
         )}
