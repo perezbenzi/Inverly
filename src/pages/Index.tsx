@@ -304,7 +304,7 @@ const Index = () => {
                 </div>
                 
                 <div className="space-y-4 mt-8">
-                  <h3 className="text-lg font-medium">Retiros</h3>
+                  <h3 className="text-lg font-medium">Withdrawals</h3>
                   <InvestmentTable 
                     investments={getWithdrawals()}
                     onEdit={handleEditInvestment}
