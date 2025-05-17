@@ -45,7 +45,7 @@ const InvestmentTable: React.FC<InvestmentTableProps> = ({
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-US");
   };
-  
+
   const getTypeLabel = (type: 'deposit' | 'withdrawal') => {
     return type === 'deposit' ? 'Depósito' : 'Retiro';
   };

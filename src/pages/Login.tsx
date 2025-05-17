@@ -7,6 +7,7 @@ import { RequestAccessModal } from '@/components/auth/RequestAccessModal'
 
 export const Login = () => {
   const [showRequestAccess, setShowRequestAccess] = useState(false)
+  const isProduction = process.env.NODE_ENV === 'production'
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -15,8 +16,18 @@ export const Login = () => {
           <Logo />
           <LoginForm />
           <div className="flex flex-col items-center space-y-4 text-sm text-muted-foreground">
+            {!isProduction && (
+              <div>
+                Don't have an account?{' '}
+                <Link 
+                  to="/register" 
+                  className="text-primary hover:text-primary/90"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
             <div>
-              Don't have an account?{' '}
               <Button 
                 variant="link" 
                 className="h-auto p-0 text-primary hover:text-primary/90"

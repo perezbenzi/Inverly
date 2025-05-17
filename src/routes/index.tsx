@@ -7,10 +7,12 @@ import { Settings } from "@/pages/Settings"
 import NotFound from "@/pages/NotFound"
 import Scenarios from "@/pages/Scenarios"
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 export const AppRoutes = () => (
   <Routes>
     <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Register />} />
+    {!isProduction && <Route path="/register" element={<Register />} />}
     <Route
       path="/"
       element={
